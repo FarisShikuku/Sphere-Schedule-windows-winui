@@ -1,0 +1,54 @@
+﻿# Build Folders
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+
+# Visual Studio user files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# VS Code settings 
+.vscode/
+
+# Rider / ReSharper
+.idea/
+_ReSharper*/
+*.[Rr]e[Ss]harper
+
+# Visual Studio temp folder
+.vs/
+
+# NuGet Packages
+*.nupkg
+*.snupkg
+packages/
+
+# Backup and temp files
+*.bak
+*.tmp
+*.swp
+*.cache
+
+# Database files
+*.mdf
+*.ldf
+
+# OS Files
+.DS_Store
+Thumbs.db
+
+# Executables / DLLs / PDBs
+*.exe
+*.dll
+*.pdb
+
+# Web / Frontend
+node_modules/
+dist/
+wwwroot/
+
+# Logs
+*.log

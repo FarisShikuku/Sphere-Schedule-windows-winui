@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- Corner Radius -->
+    <CornerRadius x:Key="LoginCornerRadius">16</CornerRadius>
+    <CornerRadius x:Key="ButtonCornerRadius">8</CornerRadius>
+
+    <!-- Base Colors -->
+    <Color x:Key="PrimaryBlueColor">#4361ee</Color>
+    <Color x:Key="PrimaryGreenColor">#4cc9f0</Color>
+    <Color x:Key="AccentYellowColor">#ffd166</Color>
+    <Color x:Key="AccentPurpleColor">#7209b7</Color>
+    <Color x:Key="AccentPinkColor">#f72585</Color>
+    <Color x:Key="DarkBackgroundColor">#1a1a2e</Color>
+    <Color x:Key="CardBackgroundColor">#162447</Color>
+    <Color x:Key="InputBackgroundColor">#0f3460</Color>
+    <Color x:Key="TextPrimaryColor">#e6e6e6</Color>
+    <Color x:Key="TextSecondaryColor">#b8b8b8</Color>
+    <Color x:Key="GlassBackgroundColor">#2A2A3A</Color>
+
+    <!-- DASHBOARD COLORS (Light Theme) -->
+    <Color x:Key="DashboardBlueColor">#2196F3</Color>
+    <Color x:Key="DashboardGreenColor">#4CAF50</Color>
+    <Color x:Key="DashboardRedColor">#F44336</Color>
+    <Color x:Key="DashboardPurpleColor">#9C27B0</Color>
+    <Color x:Key="DashboardOrangeColor">#FF9800</Color>
+    <Color x:Key="DashboardBrownColor">#795548</Color>
+    <Color x:Key="DashboardPinkColor">#E91E63</Color>
+    <Color x:Key="DashboardCyanColor">#00BCD4</Color>
+    <Color x:Key="DashboardTealColor">#009688</Color>
+    <Color x:Key="DashboardDeepOrangeColor">#FF5722</Color>
+
+    <Color x:Key="DashboardBackgroundColor">#F8FAFC</Color>
+    <Color x:Key="DashboardCardColor">#FFFFFF</Color>
+    <Color x:Key="DashboardHoverColor">#F5F7FA</Color>
+    <Color x:Key="TextPrimaryDarkColor">#1A1A1A</Color>
+    <Color x:Key="TextSecondaryDarkColor">#666666</Color>
+    <Color x:Key="TextTertiaryDarkColor">#999999</Color>
+    <Color x:Key="BorderLightColor">#E1E5E9</Color>
+    <Color x:Key="BorderMediumColor">#CBD2D9</Color>
+    <Color x:Key="ShadowDarkColor">#1A1A1A</Color>
+
+    <!-- Solid Brushes (LOGIN/DARK THEME) -->
+    <SolidColorBrush x:Key="PrimaryBlue" Color="{StaticResource PrimaryBlueColor}" />
+    <SolidColorBrush x:Key="PrimaryGreen" Color="{StaticResource PrimaryGreenColor}" />
+    <SolidColorBrush x:Key="AccentYellow" Color="{StaticResource AccentYellowColor}" />
+    <SolidColorBrush x:Key="AccentPurple" Color="{StaticResource AccentPurpleColor}" />
+    <SolidColorBrush x:Key="AccentPink" Color="{StaticResource AccentPinkColor}" />
+    <SolidColorBrush x:Key="DarkBackground" Color="{StaticResource DarkBackgroundColor}" />
+    <SolidColorBrush x:Key="CardBackground" Color="{StaticResource CardBackgroundColor}" />
+    <SolidColorBrush x:Key="InputBackground" Color="{StaticResource InputBackgroundColor}" />
+    <SolidColorBrush x:Key="TextPrimary" Color="{StaticResource TextPrimaryColor}" />
+    <SolidColorBrush x:Key="TextSecondary" Color="{StaticResource TextSecondaryColor}" />
+    <SolidColorBrush x:Key="GlassBackground" Color="{StaticResource GlassBackgroundColor}" Opacity="0.3"/>
+
+    <!-- Solid Brushes (DASHBOARD/LIGHT THEME) -->
+    <SolidColorBrush x:Key="DashboardBlue" Color="{StaticResource DashboardBlueColor}"/>
+    <SolidColorBrush x:Key="DashboardGreen" Color="{StaticResource DashboardGreenColor}"/>
+    <SolidColorBrush x:Key="DashboardRed" Color="{StaticResource DashboardRedColor}"/>
+    <SolidColorBrush x:Key="DashboardPurple" Color="{StaticResource DashboardPurpleColor}"/>
+    <SolidColorBrush x:Key="DashboardOrange" Color="{StaticResource DashboardOrangeColor}"/>
+    <SolidColorBrush x:Key="DashboardBrown" Color="{StaticResource DashboardBrownColor}"/>
+    <SolidColorBrush x:Key="DashboardPink" Color="{StaticResource DashboardPinkColor}"/>
+    <SolidColorBrush x:Key="DashboardCyan" Color="{StaticResource DashboardCyanColor}"/>
+    <SolidColorBrush x:Key="DashboardTeal" Color="{StaticResource DashboardTealColor}"/>
+    <SolidColorBrush x:Key="DashboardDeepOrange" Color="{StaticResource DashboardDeepOrangeColor}"/>
+
+    <SolidColorBrush x:Key="DashboardBackground" Color="{StaticResource DashboardBackgroundColor}"/>
+    <SolidColorBrush x:Key="DashboardCard" Color="{StaticResource DashboardCardColor}"/>
+    <SolidColorBrush x:Key="DashboardHover" Color="{StaticResource DashboardHoverColor}"/>
+    <SolidColorBrush x:Key="TextPrimaryDark" Color="{StaticResource TextPrimaryDarkColor}"/>
+    <SolidColorBrush x:Key="TextSecondaryDark" Color="{StaticResource TextSecondaryDarkColor}"/>
+    <SolidColorBrush x:Key="TextTertiaryDark" Color="{StaticResource TextTertiaryDarkColor}"/>
+    <SolidColorBrush x:Key="BorderLight" Color="{StaticResource BorderLightColor}"/>
+    <SolidColorBrush x:Key="BorderMedium" Color="{StaticResource BorderMediumColor}"/>
+    <SolidColorBrush x:Key="TextWhite" Color="#FFFFFF"/>
+
+    <!-- Shadow Colors -->
+    <SolidColorBrush x:Key="ShadowColor" Color="{StaticResource ShadowDarkColor}" Opacity="0.08"/>
+
+    <!-- Status Colors -->
+    <SolidColorBrush x:Key="SuccessColor" Color="{StaticResource DashboardGreenColor}"/>
+    <SolidColorBrush x:Key="WarningColor" Color="{StaticResource DashboardOrangeColor}"/>
+    <SolidColorBrush x:Key="ErrorColor" Color="{StaticResource DashboardRedColor}"/>
+    <SolidColorBrush x:Key="InfoColor" Color="{StaticResource DashboardBlueColor}"/>
+
+    <!-- Gradient Brushes (LOGIN/DARK THEME) -->
+    <LinearGradientBrush x:Key="MainBackgroundGradient" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="{StaticResource InputBackgroundColor}" Offset="0"/>
+        <GradientStop Color="{StaticResource DarkBackgroundColor}" Offset="0.5"/>
+        <GradientStop Color="{StaticResource CardBackgroundColor}" Offset="1"/>
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="ButtonBlueGradient" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="{StaticResource PrimaryBlueColor}" Offset="0"/>
+        <GradientStop Color="#3a56d4" Offset="1"/>
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="ButtonGreenGradient" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="{StaticResource PrimaryGreenColor}" Offset="0"/>
+        <GradientStop Color="#3db5d9" Offset="1"/>
+    </LinearGradientBrush>
+
+    <!-- Gradient Brushes (DASHBOARD/LIGHT THEME) -->
+    <LinearGradientBrush x:Key="BlueGradient" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#2196F3" Offset="0"/>
+        <GradientStop Color="#1976D2" Offset="1"/>
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="GreenGradient" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#4CAF50" Offset="0"/>
+        <GradientStop Color="#388E3C" Offset="1"/>
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="PurpleGradient" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#9C27B0" Offset="0"/>
+        <GradientStop Color="#7B1FA2" Offset="1"/>
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="OrangeGradient" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#FF9800" Offset="0"/>
+        <GradientStop Color="#F57C00" Offset="1"/>
+    </LinearGradientBrush>
+
+</ResourceDictionary>

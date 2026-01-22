@@ -1,0 +1,318 @@
+<Page
+    x:Class="Sphere_Schedule_App.Views.Pages.TasksPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converters="using:Sphere_Schedule_App.Converters"
+    xmlns:local="using:Sphere_Schedule_App.Views.Pages"
+    xmlns:controls="using:Microsoft.UI.Xaml.Controls"
+    xmlns:viewmodels="using:Sphere_Schedule_App.ViewModels"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Page.Resources>
+        <converters:BooleanToVisibilityConverter x:Key="BoolToVisibility"/>
+        <converters:StringFormatConverter x:Key="StringFormatConverter"/>
+
+        <!-- Task Item Template -->
+        <DataTemplate x:Key="TaskItemTemplate">
+            <Border 
+                Background="{StaticResource DashboardCard}"
+                CornerRadius="10"
+                Padding="16"
+                Margin="0,0,0,8"
+                BorderBrush="{StaticResource BorderLight}"
+                BorderThickness="1">
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Task ID (small and subtle) -->
+                    <StackPanel Grid.Column="0" Margin="0,0,12,0">
+                        <TextBlock 
+                            Text="ID:"
+                            FontSize="10"
+                            Foreground="{StaticResource TextTertiaryDark}"
+                            Opacity="0.7"/>
+                        <TextBlock 
+                            Text="{Binding TaskID, Converter={StaticResource StringFormatConverter}, ConverterParameter='{}{0:...}'}"
+                            FontSize="11"
+                            FontWeight="SemiBold"
+                            Foreground="{StaticResource TextSecondaryDark}"
+                            ToolTipService.ToolTip="{Binding TaskID}"/>
+                    </StackPanel>
+
+                    <!-- Task Details -->
+                    <StackPanel Grid.Column="1">
+                        <!-- Task Name and Status -->
+                        <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                            <CheckBox 
+                                IsChecked="{Binding Status, Converter={StaticResource StringFormatConverter}, ConverterParameter='completed'}"
+                                Checked="TaskCheckBox_Checked"
+                                Unchecked="TaskCheckBox_Unchecked"
+                                Tag="{Binding}"
+                                VerticalAlignment="Center"/>
+
+                            <TextBlock 
+                                Text="{Binding Title}"
+                                FontSize="16"
+                                FontWeight="SemiBold"
+                                Foreground="{StaticResource TextPrimaryDark}"
+                                TextTrimming="CharacterEllipsis"
+                                MaxLines="2"/>
+                        </StackPanel>
+
+                        <!-- Priority, Category, Due Date/Time -->
+                        <StackPanel Orientation="Horizontal" Spacing="12" Margin="24,8,0,0">
+                            <!-- Priority Badge -->
+                            <Border 
+                                Background="{Binding PriorityLevel, Converter={StaticResource PriorityToColorConverter}}"
+                                CornerRadius="4"
+                                Padding="6,2"
+                                VerticalAlignment="Center">
+                                <TextBlock 
+                                    Text="{Binding PriorityLevel, Converter={StaticResource StringFormatConverter}, ConverterParameter='{}{0}'}"
+                                    FontSize="10"
+                                    FontWeight="SemiBold"
+                                    Foreground="White"/>
+                            </Border>
+
+                            <!-- Category Badge -->
+                            <Border 
+                                Background="{StaticResource DashboardBlue}"
+                                CornerRadius="4"
+                                Padding="6,2"
+                                VerticalAlignment="Center">
+                                <TextBlock 
+                                    Text="{Binding Category}"
+                                    FontSize="10"
+                                    FontWeight="Medium"
+                                    Foreground="White"/>
+                            </Border>
+
+                            <!-- Due Date/Time -->
+                            <StackPanel Orientation="Horizontal" Spacing="4">
+                                <TextBlock 
+                                    Text="Due:"
+                                    FontSize="11"
+                                    Foreground="{StaticResource TextSecondaryDark}"/>
+                                <TextBlock 
+                                    Text="{Binding DueDate, Converter={StaticResource DateTimeFormatConverter}, ConverterParameter='MMM dd, yyyy'}"
+                                    FontSize="11"
+                                    Foreground="{StaticResource TextPrimaryDark}"
+                                    FontWeight="SemiBold"/>
+
+                                <!-- Due Time (if set) -->
+                                <TextBlock 
+                                    Text="{Binding DueTime, Converter={StaticResource StringFormatConverter}, ConverterParameter=' at {0:hh\\:mm}'}"
+                                    FontSize="11"
+                                    Foreground="{StaticResource TextSecondaryDark}"
+                                    Visibility="{Binding DueTime, Converter={StaticResource BoolToVisibility}}"/>
+                            </StackPanel>
+                        </StackPanel>
+
+                        <!-- Description (if exists) -->
+                        <TextBlock 
+                            Text="{Binding Description}"
+                            FontSize="12"
+                            Foreground="{StaticResource TextSecondaryDark}"
+                            TextTrimming="CharacterEllipsis"
+                            MaxLines="2"
+                            Margin="24,8,0,0"
+                            Visibility="{Binding Description, Converter={StaticResource BoolToVisibility}}"/>
+                    </StackPanel>
+
+                    <!-- Action Buttons -->
+                    <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="8">
+                        <Button 
+                            Style="{StaticResource IconButtonStyle}"
+                            ToolTipService.ToolTip="Edit Task">
+                            <SymbolIcon Symbol="Edit"/>
+                        </Button>
+
+                        <Button 
+                            Style="{StaticResource IconButtonStyle}"
+                            ToolTipService.ToolTip="Delete Task"
+                            Click="DeleteButton_Click"
+                            Tag="{Binding}">
+                            <SymbolIcon Symbol="Delete"/>
+                        </Button>
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </DataTemplate>
+
+        <!-- Priority to Color Converter -->
+        <local:PriorityColorConverter x:Key="PriorityToColorConverter"/>
+
+        <!-- DateTime Format Converter -->
+        <converters:DateTimeFormatConverter x:Key="DateTimeFormatConverter"/>
+
+        <!-- Icon Button Style -->
+        <Style x:Key="IconButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="{StaticResource TextSecondaryDark}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BorderLight}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="20"/>
+            <Setter Property="Width" Value="32"/>
+            <Setter Property="Height" Value="32"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+    </Page.Resources>
+
+    <Grid>
+        <!-- Main Content -->
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Border Grid.Row="0" 
+                Background="{StaticResource DashboardCard}"
+                Padding="24"
+                Margin="0,0,0,16">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Title and Stats -->
+                <StackPanel Grid.Column="0">
+                    <TextBlock 
+                        Text="📋 All Tasks"
+                        FontSize="24"
+                        FontWeight="Bold"
+                        Foreground="{StaticResource TextPrimaryDark}"/>
+
+                    <StackPanel Orientation="Horizontal" Spacing="16" Margin="0,8,0,0">
+                        <TextBlock 
+                            Text="{Binding TotalTasks, Converter={StaticResource StringFormatConverter}, ConverterParameter='{}Total: {0}'}"
+                            FontSize="14"
+                            Foreground="{StaticResource TextSecondaryDark}"/>
+
+                        <TextBlock 
+                            Text="{Binding CompletedTasks, Converter={StaticResource StringFormatConverter}, ConverterParameter='{}Completed: {0}'}"
+                            FontSize="14"
+                            Foreground="{StaticResource DashboardGreen}"
+                            FontWeight="SemiBold"/>
+
+                        <TextBlock 
+                            Text="{Binding PendingTasks, Converter={StaticResource StringFormatConverter}, ConverterParameter='{}Pending: {0}'}"
+                            FontSize="14"
+                            Foreground="{StaticResource DashboardOrange}"
+                            FontWeight="SemiBold"/>
+                    </StackPanel>
+                </StackPanel>
+
+                <!-- Action Buttons -->
+                <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="12">
+                    <Button 
+                        Content="🔄 Refresh"
+                        Click="RefreshButton_Click"
+                        Padding="12,8"
+                        CornerRadius="8"/>
+
+                    <Button 
+                        Content="➕ Add Task"
+                        Background="{StaticResource DashboardBlue}"
+                        Foreground="White"
+                        Click="AddTaskButton_Click"
+                        Padding="12,8"
+                        CornerRadius="8"
+                        FontWeight="SemiBold"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- Tasks List -->
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <StackPanel Padding="24">
+                <!-- Tasks List -->
+                <ItemsControl 
+                    ItemsSource="{Binding AllTasks}"
+                    ItemTemplate="{StaticResource TaskItemTemplate}"
+                    Visibility="{Binding HasTasks, Converter={StaticResource BoolToVisibility}}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Vertical" Spacing="8"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+
+                <!-- Empty State -->
+                <Border 
+                    Background="{StaticResource DashboardCard}"
+                    CornerRadius="12"
+                    Padding="40"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Visibility="{Binding HasTasks, Converter={StaticResource BoolToVisibility}, ConverterParameter=True}">
+                    <StackPanel Spacing="16" HorizontalAlignment="Center">
+                        <TextBlock 
+                            Text="📭"
+                            FontSize="48"
+                            HorizontalAlignment="Center"/>
+
+                        <TextBlock 
+                            Text="No tasks yet"
+                            FontSize="18"
+                            FontWeight="SemiBold"
+                            Foreground="{StaticResource TextPrimaryDark}"
+                            HorizontalAlignment="Center"/>
+
+                        <TextBlock 
+                            Text="Create your first task to get started!"
+                            FontSize="14"
+                            Foreground="{StaticResource TextSecondaryDark}"
+                            HorizontalAlignment="Center"/>
+
+                        <Button 
+                            Content="➕ Add Your First Task"
+                            Background="{StaticResource DashboardBlue}"
+                            Foreground="White"
+                            Click="AddTaskButton_Click"
+                            Padding="16,10"
+                            CornerRadius="8"
+                            FontWeight="SemiBold"
+                            HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- Loading Overlay -->
+        <Border Grid.Row="0" Grid.RowSpan="2"
+                Background="#CCFFFFFF"
+                Visibility="{Binding IsLoading, Converter={StaticResource BoolToVisibility}}">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="16">
+                <ProgressRing IsActive="True" Width="40" Height="40"/>
+                <TextBlock Text="Loading tasks..." FontWeight="SemiBold"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Error Message -->
+        <Border Grid.Row="0" Grid.RowSpan="2"
+                Background="#CCFFFFFF"
+                Visibility="{Binding ErrorMessage, Converter={StaticResource BoolToVisibility}}">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="16">
+                <TextBlock 
+                    Text="{Binding ErrorMessage}"
+                    Foreground="#D32F2F"
+                    FontWeight="SemiBold"
+                    TextWrapping="Wrap"
+                    TextAlignment="Center"/>
+                <Button 
+                    Content="Retry"
+                    Click="RetryButton_Click"
+                    Padding="12,6"/>
+            </StackPanel>
+        </Border>
+    </Grid>
+</Page>

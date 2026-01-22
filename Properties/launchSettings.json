@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Sphere Schedule App (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "Sphere Schedule App (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}

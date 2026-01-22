@@ -1,0 +1,520 @@
+<UserControl
+    x:Class="Sphere_Schedule_App.Views.Controls.TaskFilterPanel"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converters="using:Sphere_Schedule_App.Converters"
+    xmlns:local="using:Sphere_Schedule_App.Views.Controls"
+    xmlns:controls="using:Microsoft.UI.Xaml.Controls"
+    xmlns:viewmodels="using:Sphere_Schedule_App.ViewModels" xmlns:xaml="using:Microsoft.UI.Xaml"
+    Height="Auto"
+    Width="Auto">
+
+    <UserControl.Resources>
+        <converters:BooleanToVisibilityConverter x:Key="BoolToVisibility"/>
+        <converters:PriorityToColorConverter x:Key="PriorityToColorConverter"/>
+        <converters:CategoryToColorConverter x:Key="CategoryToColorConverter"/>
+        <converters:DateTimeFormatConverter x:Key="DateTimeFormatConverter"/>
+        <converters:StringFormatConverter x:Key="StringFormatConverter"/>
+
+        <!-- Task Item Template -->
+        <DataTemplate x:Key="TaskItemTemplate">
+            <Border 
+                Background="{StaticResource DashboardCard}"
+                CornerRadius="10"
+                Padding="16"
+                Margin="0,0,0,8"
+                BorderBrush="{StaticResource BorderLight}"
+                BorderThickness="1">
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Checkbox for completion -->
+                    <ToggleButton 
+                        Grid.Column="0"
+                        IsChecked="{Binding Status, Converter={StaticResource BoolToVisibility}, ConverterParameter='completed'}"
+                        Command="{Binding ElementName=RootControl, Path=DataContext.ToggleTaskCompletionCommand}"
+                        CommandParameter="{Binding}"
+                        Width="24"
+                        Height="24"
+                        Margin="0,0,12,0"
+                        VerticalAlignment="Center">
+
+                        <ToggleButton.Template>
+                            <ControlTemplate TargetType="ToggleButton">
+                                <Grid>
+                                    <Ellipse 
+                                        x:Name="OuterCircle"
+                                        Fill="Transparent"
+                                        Stroke="{StaticResource TextSecondaryDark}"
+                                        StrokeThickness="2"
+                                        Width="24"
+                                        Height="24"/>
+
+                                    <!-- Line 63: Replace StrokeLineCap with StrokeStartLineCap and StrokeEndLineCap -->
+                                    <Path 
+                                        x:Name="CheckMark"
+                                        Data="M9,16.17L4.83,12l-1.42,1.41L9,19 21,7l-1.41-1.41z"
+                                        Stroke="{StaticResource DashboardGreen}"
+                                        StrokeThickness="2"
+                                        StrokeStartLineCap="Round"
+                                        StrokeEndLineCap="Round"
+                                        StrokeLineJoin="Round"
+                                        Width="16"
+                                        Height="16"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Visibility="Collapsed"/>
+
+                                    <VisualStateManager.VisualStateGroups>
+                                        <VisualStateGroup x:Name="CheckStates">
+                                            <xaml:VisualState x:Name="Checked">
+                                                <VisualState.Setters>
+                                                    <Setter Target="OuterCircle.Stroke" Value="{StaticResource DashboardGreen}"/>
+                                                    <Setter Target="OuterCircle.Fill" Value="{StaticResource DashboardGreen}"/>
+                                                    <Setter Target="CheckMark.Visibility" Value="Visible"/>
+                                                </VisualState.Setters>
+                                            </xaml:VisualState>
+                                            <VisualState x:Name="Unchecked"/>
+                                            <VisualState x:Name="Indeterminate"/>
+                                        </VisualStateGroup>
+                                    </VisualStateManager.VisualStateGroups>
+                                </Grid>
+                            </ControlTemplate>
+                        </ToggleButton.Template>
+                    </ToggleButton>
+
+                    <!-- Task Details -->
+                    <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                        <!-- Task Title and Progress -->
+                        <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                            <TextBlock 
+                                Text="{Binding Title}"
+                                FontSize="16"
+                                FontWeight="SemiBold"
+                                Foreground="{StaticResource TextPrimaryDark}"
+                                TextTrimming="CharacterEllipsis"
+                                MaxLines="1"/>
+
+                            <!-- Progress Indicator -->
+                            <Border 
+                                Background="{StaticResource DashboardHover}"
+                                CornerRadius="8"
+                                Padding="6,2"
+                                MinWidth="40"
+                                HorizontalAlignment="Right">
+                                <TextBlock 
+                                    Text="{Binding CompletionPercentage, Converter={StaticResource StringFormatConverter}, ConverterParameter='{}{0}%'}"
+                                    FontSize="11"
+                                    FontWeight="Medium"
+                                    Foreground="{StaticResource TextSecondaryDark}"
+                                    HorizontalAlignment="Center"/>
+                            </Border>
+                        </StackPanel>
+
+                        <!-- Priority, Category, Due Date -->
+                        <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,6,0,0">
+                            <!-- Priority Indicator -->
+                            <Border 
+                                Background="{Binding PriorityLevel, Converter={StaticResource PriorityToColorConverter}}"
+                                CornerRadius="4"
+                                Padding="6,2"
+                                VerticalAlignment="Center">
+                                <!-- Line 130: Remove TextTransform and use uppercase text manually or via converter -->
+                                <TextBlock 
+                                    Text="{Binding PriorityLevel, Converter={StaticResource StringFormatConverter}, ConverterParameter='{}{0}'}"
+                                    FontSize="10"
+                                    FontWeight="SemiBold"
+                                    Foreground="White"/>
+                            </Border>
+
+                            <!-- Category Badge -->
+                            <Border 
+                                Background="{Binding Category, Converter={StaticResource CategoryToColorConverter}}"
+                                CornerRadius="4"
+                                Padding="6,2"
+                                VerticalAlignment="Center">
+                                <TextBlock 
+                                    Text="{Binding Category}"
+                                    FontSize="10"
+                                    FontWeight="Medium"
+                                    Foreground="White"/>
+                            </Border>
+
+                            <!-- Due Date/Time -->
+                            <TextBlock 
+                                Text="{Binding DueDate, Converter={StaticResource DateTimeFormatConverter}, ConverterParameter='Due: MMM dd, hh:mm tt'}"
+                                FontSize="11"
+                                Foreground="{StaticResource TextSecondaryDark}"
+                                VerticalAlignment="Center"
+                                Margin="4,0,0,0"/>
+                        </StackPanel>
+                    </StackPanel>
+
+                    <!-- Optional: Quick Actions -->
+                    <StackPanel Grid.Column="2" VerticalAlignment="Center">
+                        <!-- Could add menu or quick actions here -->
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </DataTemplate>
+
+        <!-- Filter Button Style -->
+        <Style x:Key="FilterButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="{StaticResource DashboardCard}"/>
+            <Setter Property="Foreground" Value="{StaticResource TextPrimaryDark}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BorderLight}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="Padding" Value="12,8"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Grid>
+                            <Border 
+                                x:Name="BackgroundBorder"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="{TemplateBinding CornerRadius}">
+                                <Border.Shadow>
+                                    <ThemeShadow/>
+                                </Border.Shadow>
+                            </Border>
+
+                            <ContentPresenter 
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Content="{TemplateBinding Content}"/>
+
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualState x:Name="Normal"/>
+                                    <VisualState x:Name="PointerOver">
+                                        <VisualState.Setters>
+                                            <Setter Target="BackgroundBorder.Background" Value="{StaticResource DashboardHover}"/>
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                    <VisualState x:Name="Pressed">
+                                        <VisualState.Setters>
+                                            <Setter Target="BackgroundBorder.Background" Value="{StaticResource BorderLight}"/>
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Section Header Style -->
+        <Style x:Key="SectionHeaderStyle" TargetType="Border">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Padding" Value="0,0,0,12"/>
+            <Setter Property="CornerRadius" Value="0"/>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid x:Name="RootControl">
+        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+            <StackPanel Spacing="24">
+
+                <!-- Filter Controls Section -->
+                <Border Style="{StaticResource SectionHeaderStyle}">
+                    <StackPanel Spacing="12">
+                        <TextBlock 
+                            Text="🎯 Task Management"
+                            FontSize="18"
+                            FontWeight="Bold"
+                            Foreground="{StaticResource TextPrimaryDark}"/>
+
+                        <!-- Filter Controls Grid -->
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Period Filter -->
+                            <Button 
+                                Grid.Column="0"
+                                Style="{StaticResource FilterButtonStyle}"
+                                Margin="0,0,8,0"
+                                ToolTipService.ToolTip="Filter by time period">
+                                <StackPanel Orientation="Horizontal" Spacing="6">
+                                    <TextBlock Text="Period:" Foreground="{StaticResource TextSecondaryDark}"/>
+                                    <TextBlock Text="{Binding PeriodDisplayText}" FontWeight="SemiBold"/>
+                                    <TextBlock Text="▾" Margin="4,0,0,0"/>
+                                </StackPanel>
+                                <Button.Flyout>
+                                    <MenuFlyout Placement="Bottom">
+                                        <MenuFlyoutItem Text="Today" Command="{Binding ChangePeriodCommand}" CommandParameter="today"/>
+                                        <MenuFlyoutItem Text="This Week" Command="{Binding ChangePeriodCommand}" CommandParameter="week"/>
+                                        <MenuFlyoutItem Text="This Month" Command="{Binding ChangePeriodCommand}" CommandParameter="month"/>
+                                        <MenuFlyoutItem Text="This Year" Command="{Binding ChangePeriodCommand}" CommandParameter="year"/>
+                                        <MenuFlyoutItem Text="All Time" Command="{Binding ChangePeriodCommand}" CommandParameter="all"/>
+                                        <MenuFlyoutSeparator/>
+                                        <MenuFlyoutItem Text="Custom Range..." IsEnabled="False"/>
+                                    </MenuFlyout>
+                                </Button.Flyout>
+                            </Button>
+
+                            <!-- View Mode Filter -->
+                            <Button 
+                                Grid.Column="1"
+                                Style="{StaticResource FilterButtonStyle}"
+                                Margin="0,0,8,0"
+                                ToolTipService.ToolTip="Change view mode">
+                                <StackPanel Orientation="Horizontal" Spacing="6">
+                                    <TextBlock Text="View:" Foreground="{StaticResource TextSecondaryDark}"/>
+                                    <TextBlock Text="{Binding ViewModeDisplayText}" FontWeight="SemiBold"/>
+                                    <TextBlock Text="▾" Margin="4,0,0,0"/>
+                                </StackPanel>
+                                <Button.Flyout>
+                                    <MenuFlyout Placement="Bottom">
+                                        <MenuFlyoutItem Text="List" Command="{Binding ChangeViewModeCommand}" CommandParameter="list" IsEnabled="True"/>
+                                        <MenuFlyoutItem Text="Grid" Command="{Binding ChangeViewModeCommand}" CommandParameter="grid" IsEnabled="False"/>
+                                        <MenuFlyoutItem Text="Calendar" Command="{Binding ChangeViewModeCommand}" CommandParameter="calendar" IsEnabled="False"/>
+                                        <MenuFlyoutItem Text="Timeline" Command="{Binding ChangeViewModeCommand}" CommandParameter="timeline" IsEnabled="False"/>
+                                    </MenuFlyout>
+                                </Button.Flyout>
+                            </Button>
+
+                            <!-- Priority Filter -->
+                            <Button 
+                                Grid.Column="2"
+                                Style="{StaticResource FilterButtonStyle}"
+                                Margin="0,0,8,0"
+                                ToolTipService.ToolTip="Filter by priority">
+                                <StackPanel Orientation="Horizontal" Spacing="6">
+                                    <TextBlock Text="Priority:" Foreground="{StaticResource TextSecondaryDark}"/>
+                                    <TextBlock Text="{Binding PriorityDisplayText}" FontWeight="SemiBold"/>
+                                    <TextBlock Text="▾" Margin="4,0,0,0"/>
+                                </StackPanel>
+                                <Button.Flyout>
+                                    <MenuFlyout Placement="Bottom">
+                                        <MenuFlyoutItem Text="All" Command="{Binding ChangePriorityCommand}" CommandParameter="all"/>
+                                        <MenuFlyoutItem Text="Critical" Command="{Binding ChangePriorityCommand}" CommandParameter="critical"/>
+                                        <MenuFlyoutItem Text="High" Command="{Binding ChangePriorityCommand}" CommandParameter="high"/>
+                                        <MenuFlyoutItem Text="Medium" Command="{Binding ChangePriorityCommand}" CommandParameter="medium"/>
+                                        <MenuFlyoutItem Text="Low" Command="{Binding ChangePriorityCommand}" CommandParameter="low"/>
+                                    </MenuFlyout>
+                                </Button.Flyout>
+                            </Button>
+
+                            <!-- Category Filter -->
+                            <Button 
+                                Grid.Column="3"
+                                Style="{StaticResource FilterButtonStyle}"
+                                ToolTipService.ToolTip="Filter by category">
+                                <StackPanel Orientation="Horizontal" Spacing="6">
+                                    <TextBlock Text="Category:" Foreground="{StaticResource TextSecondaryDark}"/>
+                                    <TextBlock Text="{Binding CategoryDisplayText}" FontWeight="SemiBold"/>
+                                    <TextBlock Text="▾" Margin="4,0,0,0"/>
+                                </StackPanel>
+                                <Button.Flyout>
+                                    <MenuFlyout Placement="Bottom">
+                                        <MenuFlyoutItem Text="All" Command="{Binding ChangeCategoryCommand}" CommandParameter="all"/>
+                                        <MenuFlyoutItem Text="Work" Command="{Binding ChangeCategoryCommand}" CommandParameter="work"/>
+                                        <MenuFlyoutItem Text="Personal" Command="{Binding ChangeCategoryCommand}" CommandParameter="personal"/>
+                                        <MenuFlyoutItem Text="Health" Command="{Binding ChangeCategoryCommand}" CommandParameter="health"/>
+                                        <MenuFlyoutItem Text="Education" Command="{Binding ChangeCategoryCommand}" CommandParameter="education"/>
+                                        <MenuFlyoutItem Text="Shopping" Command="{Binding ChangeCategoryCommand}" CommandParameter="shopping"/>
+                                        <MenuFlyoutItem Text="Finance" Command="{Binding ChangeCategoryCommand}" CommandParameter="finance"/>
+                                        <MenuFlyoutItem Text="Entertainment" Command="{Binding ChangeCategoryCommand}" CommandParameter="entertainment"/>
+                                        <MenuFlyoutItem Text="Other" Command="{Binding ChangeCategoryCommand}" CommandParameter="other"/>
+                                    </MenuFlyout>
+                                </Button.Flyout>
+                            </Button>
+
+                            <!-- Stats Summary -->
+                            <StackPanel Grid.Column="4" Orientation="Horizontal" HorizontalAlignment="Right" Spacing="16">
+                                <TextBlock 
+                                    Text="{Binding TotalCurrentTasks, Converter={StaticResource StringFormatConverter}, ConverterParameter='{}Current: {0}'}"
+                                    FontSize="12"
+                                    Foreground="{StaticResource TextSecondaryDark}"
+                                    VerticalAlignment="Center"/>
+
+                                <TextBlock 
+                                    Text="{Binding TotalUpcomingTasks, Converter={StaticResource StringFormatConverter}, ConverterParameter='{}Upcoming: {0}'}"
+                                    FontSize="12"
+                                    Foreground="{StaticResource TextSecondaryDark}"
+                                    VerticalAlignment="Center"/>
+
+                                <TextBlock 
+                                    Text="{Binding CompletedTodayCount, Converter={StaticResource StringFormatConverter}, ConverterParameter='{}Completed Today: {0}'}"
+                                    FontSize="12"
+                                    Foreground="{StaticResource DashboardGreen}"
+                                    FontWeight="SemiBold"
+                                    VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <!-- Current Tasks Section -->
+                <Border 
+                    Background="{StaticResource DashboardCard}"
+                    CornerRadius="16"
+                    Padding="24">
+                    <StackPanel Spacing="16">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
+                            <TextBlock 
+                                Text="📋 Current Tasks"
+                                FontSize="18"
+                                FontWeight="Bold"
+                                Foreground="{StaticResource TextPrimaryDark}"/>
+
+                            <Border 
+                                Background="{StaticResource DashboardBlue}"
+                                CornerRadius="12"
+                                Padding="8,4"
+                                Margin="12,0,0,0">
+                                <TextBlock 
+                                    Text="{Binding TotalCurrentTasks}"
+                                    Foreground="White"
+                                    FontWeight="SemiBold"/>
+                            </Border>
+                        </StackPanel>
+
+                        <!-- Tasks List -->
+                        <ItemsControl 
+                            ItemsSource="{Binding CurrentTasks}"
+                            ItemTemplate="{StaticResource TaskItemTemplate}"
+                            Visibility="{Binding TotalCurrentTasks, Converter={StaticResource BoolToVisibility}}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Vertical" Spacing="8"/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                        </ItemsControl>
+
+                        <!-- Empty State -->
+                        <TextBlock 
+                            Text="No tasks yet. Add your first task!"
+                            FontSize="14"
+                            FontStyle="Italic"
+                            Foreground="{StaticResource TextTertiaryDark}"
+                            HorizontalAlignment="Center"
+                            Padding="0,20"
+                            Visibility="{Binding TotalCurrentTasks, Converter={StaticResource BoolToVisibility}, ConverterParameter=True}"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Upcoming Tasks Section -->
+                <Border 
+                    Background="{StaticResource DashboardCard}"
+                    CornerRadius="16"
+                    Padding="24">
+                    <StackPanel Spacing="16">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
+                            <TextBlock 
+                                Text="⏰ Upcoming Tasks"
+                                FontSize="18"
+                                FontWeight="Bold"
+                                Foreground="{StaticResource TextPrimaryDark}"/>
+
+                            <Border 
+                                Background="{StaticResource DashboardOrange}"
+                                CornerRadius="12"
+                                Padding="8,4"
+                                Margin="12,0,0,0">
+                                <TextBlock 
+                                    Text="{Binding TotalUpcomingTasks}"
+                                    Foreground="White"
+                                    FontWeight="SemiBold"/>
+                            </Border>
+                        </StackPanel>
+
+                        <!-- Upcoming Tasks List -->
+                        <ItemsControl 
+                            ItemsSource="{Binding UpcomingTasks}"
+                            ItemTemplate="{StaticResource TaskItemTemplate}"
+                            Visibility="{Binding TotalUpcomingTasks, Converter={StaticResource BoolToVisibility}}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Vertical" Spacing="8"/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                        </ItemsControl>
+
+                        <!-- Empty State -->
+                        <TextBlock 
+                            Text="No upcoming tasks scheduled."
+                            FontSize="14"
+                            FontStyle="Italic"
+                            Foreground="{StaticResource TextTertiaryDark}"
+                            HorizontalAlignment="Center"
+                            Padding="0,20"
+                            Visibility="{Binding TotalUpcomingTasks, Converter={StaticResource BoolToVisibility}, ConverterParameter=True}"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Action Buttons -->
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Button 
+                        Grid.Column="0"
+                        Content="＋ Add New Task"
+                        Background="{StaticResource DashboardBlue}"
+                        Foreground="White"
+                        CornerRadius="8"
+                        Padding="16,10"
+                        FontWeight="SemiBold"
+                        HorizontalAlignment="Stretch"
+                        Margin="0,0,8,0"
+                        Click="AddTaskButton_Click"/>
+
+                    <!-- In TaskFilterPanel.xaml, update the "View All Tasks" button: -->
+                    <Button 
+                        Grid.Column="1"
+                        Content="📊 View All Tasks"
+                        Background="{StaticResource DashboardCard}"
+                        Foreground="{StaticResource TextPrimaryDark}"
+                        BorderBrush="{StaticResource BorderLight}"
+                        BorderThickness="1"
+                        CornerRadius="8"
+                        Padding="16,10"
+                        FontWeight="SemiBold"
+                        HorizontalAlignment="Stretch"
+                        Margin="8,0,0,0"
+                        Click="ViewAllTasksButton_Click"/>
+                </Grid>
+
+                <!-- Loading Indicator -->
+                <!-- Loading Indicator -->
+                <Border 
+                    Background="{StaticResource DashboardCard}"
+                    CornerRadius="16"
+                    Padding="40"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Visibility="{Binding IsLoading, Converter={StaticResource BoolToVisibility}}">
+                    <StackPanel Spacing="16" HorizontalAlignment="Center">
+                        <ProgressRing IsActive="True"
+                      Width="40"
+                      Height="40"
+                      Foreground="{StaticResource DashboardBlue}"/>
+                        <TextBlock Text="Loading your data..."
+                   Foreground="{StaticResource TextSecondaryDark}"
+                   HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

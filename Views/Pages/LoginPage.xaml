@@ -1,0 +1,338 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="Sphere_Schedule_App.Views.Pages.LoginPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Sphere_Schedule_App.Views.Pages"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:Microsoft.UI.Xaml.Controls"
+    xmlns:media="using:Microsoft.UI.Xaml.Media"
+    mc:Ignorable="d">
+
+    <Page.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="ms-appx:///Views/Templates/ResourceDictionaries/Colors.xaml"/>
+                <ResourceDictionary Source="ms-appx:///Views/Templates/ResourceDictionaries/Styles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Page.Resources>
+
+
+    <Grid Background="{StaticResource MainBackgroundGradient}">
+        <!-- Animated Background Particles -->
+        <Canvas x:Name="ParticleCanvas" Opacity="0.3">
+            <!-- Particles will be added in code-behind -->
+        </Canvas>
+
+        <!-- Main Content Container -->
+        <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Decorative Orbs -->
+            <Grid Grid.RowSpan="2">
+                <!-- Floating Orb 1 -->
+                <Ellipse Width="200" Height="200" Opacity="0.15">
+                    <Ellipse.Fill>
+                        <RadialGradientBrush>
+                            <GradientStop Color="{StaticResource PrimaryBlueColor}" Offset="0"/>
+                            <GradientStop Color="Transparent" Offset="1"/>
+                        </RadialGradientBrush>
+                    </Ellipse.Fill>
+                    <Ellipse.RenderTransform>
+                        <TranslateTransform X="-150" Y="-100"/>
+                    </Ellipse.RenderTransform>
+                </Ellipse>
+
+                <!-- Floating Orb 2 -->
+                <Ellipse Width="150" Height="150" Opacity="0.1">
+                    <Ellipse.Fill>
+                        <RadialGradientBrush>
+                            <GradientStop Color="{StaticResource PrimaryGreenColor}" Offset="0"/>
+                            <GradientStop Color="Transparent" Offset="1"/>
+                        </RadialGradientBrush>
+                    </Ellipse.Fill>
+                    <Ellipse.RenderTransform>
+                        <TranslateTransform X="200" Y="50"/>
+                    </Ellipse.RenderTransform>
+                </Ellipse>
+
+                <!-- Floating Orb 3 -->
+                <Ellipse Width="100" Height="100" Opacity="0.08">
+                    <Ellipse.Fill>
+                        <RadialGradientBrush>
+                            <GradientStop Color="{StaticResource AccentPinkColor}" Offset="0"/>
+                            <GradientStop Color="Transparent" Offset="1"/>
+                        </RadialGradientBrush>
+                    </Ellipse.Fill>
+                    <Ellipse.RenderTransform>
+                        <TranslateTransform X="-100" Y="150"/>
+                    </Ellipse.RenderTransform>
+                </Ellipse>
+            </Grid>
+
+            <!-- Login Card with Glass Morphism -->
+            <Border Grid.Row="1" 
+                    Width="420" 
+                    Padding="40" 
+                    CornerRadius="{StaticResource LoginCornerRadius}"
+                    Background="{StaticResource GlassBackground}"
+                    BorderThickness="1"
+                    BorderBrush="#FFFFFF15">
+                <Border.Shadow>
+                    <ThemeShadow/>
+                </Border.Shadow>
+
+                <StackPanel Spacing="24">
+                    <!-- Header with Logo and Title -->
+                    <StackPanel Spacing="16" HorizontalAlignment="Center">
+                        <!-- App Logo -->
+                        <Grid Width="80" Height="80">
+                            <Ellipse Fill="{StaticResource ButtonBlueGradient}">
+                                <Ellipse.Shadow>
+                                    <ThemeShadow/>
+                                </Ellipse.Shadow>
+                            </Ellipse>
+                            <Viewbox Margin="20">
+                                <Path Data="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4M12,6A6,6 0 0,0 6,12A6,6 0 0,0 12,18A6,6 0 0,0 18,12A6,6 0 0,0 12,6Z" 
+                                      Fill="White" 
+                                      Stretch="Uniform"/>
+                            </Viewbox>
+                        </Grid>
+
+                        <!-- App Name and Tagline -->
+                        <StackPanel Spacing="4" HorizontalAlignment="Center">
+                            <TextBlock Text="Sphere Schedule" 
+                                       Foreground="White" 
+                                       FontSize="28" 
+                                       FontWeight="Bold"
+                                       HorizontalAlignment="Center"/>
+                            <TextBlock Text="Organize your universe of tasks" 
+                                       Foreground="{StaticResource TextSecondary}" 
+                                       FontSize="14"
+                                       HorizontalAlignment="Center"/>
+                        </StackPanel>
+                    </StackPanel>
+
+                    <!-- Login Form -->
+                    <StackPanel Spacing="16">
+                        <!-- Email Input -->
+                        <StackPanel Spacing="8">
+                            <TextBlock Text="Email" 
+                                       Foreground="{StaticResource TextPrimary}" 
+                                       FontSize="12" 
+                                       FontWeight="SemiBold"/>
+                            <TextBox x:Name="EmailTextBox" 
+                                     Style="{StaticResource ModernTextBox}"
+                                     PlaceholderText="your.email@example.com"
+                                     KeyDown="EmailTextBox_KeyDown"/>
+                        </StackPanel>
+
+                        <!-- Password Input -->
+                        <StackPanel Spacing="8">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="Password" 
+                                           Foreground="{StaticResource TextPrimary}" 
+                                           FontSize="12" 
+                                           FontWeight="SemiBold"/>
+                                <Button x:Name="ForgotPasswordButton" 
+                                        Grid.Column="1"
+                                        Style="{StaticResource IconButtonStyle}"
+                                        FontSize="12"
+                                        Click="ForgotPasswordButton_Click"
+                                        ToolTipService.ToolTip="Password recovery">
+                                    <TextBlock Text="Forgot?"/>
+                                </Button>
+                            </Grid>
+                            <PasswordBox x:Name="PasswordBox" 
+                                         PlaceholderText="Enter your password"
+                                         PasswordRevealMode="Peek"
+                                         Style="{StaticResource ModernPasswordBox}"
+                                         KeyDown="PasswordBox_KeyDown"/>
+                        </StackPanel>
+
+                        <!-- Remember Me & Help -->
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <CheckBox x:Name="RememberMeCheckBox" 
+                                      Content="Remember me"
+                                      Foreground="{StaticResource TextSecondary}"
+                                      FontSize="12"/>
+
+                            <Button x:Name="HelpButton" 
+                                    Grid.Column="2"
+                                    Style="{StaticResource IconButtonStyle}"
+                                    FontWeight="Bold"
+                                    Click="HelpButton_Click"
+                                    ToolTipService.ToolTip="Get help">
+                                <TextBlock Text="?"/>
+                            </Button>
+                        </Grid>
+
+                        <!-- Login Button -->
+                        <Button x:Name="LoginButton" 
+                                Content="Sign In" 
+                                Style="{StaticResource ModernButton}"
+                                FontSize="16"
+                                Click="LoginButton_Click">
+                            <Button.Background>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                    <GradientStop Color="{StaticResource PrimaryBlueColor}" Offset="0"/>
+                                    <GradientStop Color="{StaticResource PrimaryGreenColor}" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Button.Background>
+                        </Button>
+                    </StackPanel>
+
+                    <!-- Divider -->
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Rectangle Height="1" 
+                                   Fill="{StaticResource TextSecondary}" 
+                                   Opacity="0.3"
+                                   VerticalAlignment="Center"/>
+                        <TextBlock Grid.Column="1" 
+                                   Text="or continue with" 
+                                   Foreground="{StaticResource TextSecondary}" 
+                                   FontSize="12"
+                                   Margin="12,0"
+                                   VerticalAlignment="Center"/>
+                        <Rectangle Grid.Column="2" 
+                                   Height="1" 
+                                   Fill="{StaticResource TextSecondary}" 
+                                   Opacity="0.3"
+                                   VerticalAlignment="Center"/>
+                    </Grid>
+
+                    <!-- Social Login Buttons -->
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Google Login -->
+                        <Button x:Name="GoogleLoginButton" 
+                                Grid.Column="0" 
+                                Style="{StaticResource SocialButtonStyle}"
+                                Click="GoogleLoginButton_Click">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <FontIcon Glyph="&#xE774;" FontSize="16"/>
+                                <TextBlock Text="Google"/>
+                            </StackPanel>
+                        </Button>
+
+                        <!-- Microsoft Login -->
+                        <Button x:Name="MicrosoftLoginButton"
+                                Grid.Column="1" 
+                                Style="{StaticResource SocialButtonStyle}"
+                                Margin="8,0"
+                                Click="MicrosoftLoginButton_Click">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <FontIcon Glyph="&#xEC27;" FontSize="16"/>
+                                <TextBlock Text="Microsoft"/>
+                            </StackPanel>
+                        </Button>
+
+                        <!-- Apple Login -->
+                        <Button x:Name="AppleLoginButton"
+                                Grid.Column="2" 
+                                Style="{StaticResource SocialButtonStyle}"
+                                Click="AppleLoginButton_Click">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <FontIcon Glyph="&#xE711;" FontSize="16"/>
+                                <TextBlock Text="Apple"/>
+                            </StackPanel>
+                        </Button>
+                    </Grid>
+
+                    <!-- Alternative Options -->
+                    <StackPanel Spacing="12">
+                        <!-- Create Account -->
+                        <Button x:Name="CreateAccountButton" 
+                                Style="{StaticResource SocialButtonStyle}"
+                                Click="CreateAccountButton_Click">
+                            <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center">
+                                <FontIcon Glyph="&#xE8FA;" FontSize="14"/>
+                                <TextBlock Text="Create New Account"/>
+                            </StackPanel>
+                        </Button>
+
+                        <!-- Skip for Now -->
+                        <Button x:Name="SkipButton" 
+                                Style="{StaticResource IconButtonStyle}"
+                                FontSize="14"
+                                FontWeight="SemiBold"
+                                HorizontalAlignment="Center"
+                                Click="SkipButton_Click">
+                            <Button.Background>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                    <GradientStop Color="{StaticResource AccentPurpleColor}" Offset="0"/>
+                                    <GradientStop Color="{StaticResource AccentPinkColor}" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Button.Background>
+                            <TextBlock Text="Skip for Now →"/>
+                        </Button>
+                    </StackPanel>
+
+                    <!-- Version Info -->
+                    <TextBlock Text="v2.0.0 · Sphere Schedule Inc." 
+                               Foreground="{StaticResource TextSecondary}" 
+                               FontSize="11"
+                               HorizontalAlignment="Center"
+                               Opacity="0.7"/>
+                </StackPanel>
+            </Border>
+        </Grid>
+
+        <!-- Notification Dialog -->
+        <controls:TeachingTip x:Name="NotImplementedTip"
+                              Title="Feature Not Available"
+                              Subtitle="This feature is not yet implemented."
+                              IsLightDismissEnabled="True"
+                              PreferredPlacement="TopRight"
+                              CloseButtonContent="OK">
+            <controls:TeachingTip.IconSource>
+                <controls:SymbolIconSource Symbol="Help"/>
+            </controls:TeachingTip.IconSource>
+        </controls:TeachingTip>
+
+        <!-- Loading Overlay -->
+        <Grid x:Name="LoadingOverlay" 
+              Background="#80000000" 
+              Visibility="Collapsed">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="16">
+                <ProgressRing Width="60" Height="60" IsActive="True">
+                    <ProgressRing.Foreground>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Color="{StaticResource PrimaryBlueColor}" Offset="0"/>
+                            <GradientStop Color="{StaticResource PrimaryGreenColor}" Offset="1"/>
+                        </LinearGradientBrush>
+                    </ProgressRing.Foreground>
+                </ProgressRing>
+                <TextBlock Text="Loading..." 
+                           Foreground="White" 
+                           FontSize="16" 
+                           FontWeight="SemiBold"/>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Page>
