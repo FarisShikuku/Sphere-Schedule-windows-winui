@@ -9,6 +9,7 @@
 *.user
 *.userosscache
 *.sln.docstates
+*.slnx.docstates
 
 # VS Code settings 
 .vscode/
